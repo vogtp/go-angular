@@ -2,7 +2,15 @@
 
 ## angular.Filesystem
 
-Server a static director (e.g. by embedding) as native go http server:
+Server a static directory (e.g. by embedding) as native go http server:
+import (
+"embed"
+"io/fs"
+"net/http"
+
+    "github.com/vogtp/go-angular"
+
+)
 
     //go:embed static
     var staticWeb embed.FS
@@ -11,5 +19,6 @@ Server a static director (e.g. by embedding) as native go http server:
     if err != nil {
     	panic(err)
     }
-    http.Handle("/", http.FileServer(fsys))
+    ngFS := angular.FileSystem(fsys)
+    http.Handle("/", http.FileServer(ngFS))
     http.ListenAndServe(":8080", nil)
