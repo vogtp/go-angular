@@ -11,7 +11,7 @@ import (
 func FileSystem(fs fs.FS) http.FileSystem {
 
 	return &angularFS{
-		slog: slog.Default().WithGroup("NgFS"),
+		slog: slog.Default().WithGroup("angularFS"),
 		root: http.FS(fs),
 	}
 }
@@ -22,19 +22,19 @@ type angularFS struct {
 }
 
 func (a *angularFS) Open(name string) (http.File, error) {
-	a.slog.Debug("NgFS open", "name", name)
+	a.slog.Debug("angularFS open", "name", name)
 	f, err := a.root.Open(name)
 	if err == nil {
 		return f, nil
 	}
 	_, file := path.Split(name)
 	name = "/" + file
-	a.slog.Debug("NgFS try serve", "path", name)
+	a.slog.Debug("angularFS try serve", "path", name)
 	f, err = a.root.Open(name)
 	if err == nil {
 		return f, nil
 	}
 	name = "/index.html"
-	a.slog.Debug("NgFS serve default", "path", name)
+	a.slog.Debug("angularFS serve default", "path", name)
 	return a.root.Open(name)
 }
